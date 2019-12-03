@@ -58,13 +58,15 @@ pipeline {
                     sh("curl -s --write-out %{response_code} --output /dev/null -H \"Authorization: JWT ${TOKEN}\" -X PATCH --data-urlencode description=${REPO_SUMMARY} ${DOCKER_REPO_URL}")
                 }
             }
-            post {
-                always {
-                    // cleanup
-                    def WORKSPACE = pwd()
-                    sh("rm -rf ${WORKSPACE}")
-                }
-            }
-        }
+         }
     }
+
+    post {
+         always {
+            // cleanup
+            def WORKSPACE = pwd()
+            sh("rm -rf ${WORKSPACE}")
+         }
+    }
+
 }
