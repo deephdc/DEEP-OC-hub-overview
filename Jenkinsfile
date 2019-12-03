@@ -55,7 +55,7 @@ pipeline {
                     echo "[INFO] Received response code: ${RESPONSE_CODE}";
 
                     // update short description, aka summary
-                    sh("curl -s --write-out %{response_code} --output /dev/null -H \"Authorization: JWT ${TOKEN}\" -X PATCH --data-urlencode description=${REPO_SUMMARY} ${DOCKER_REPO_URL}")
+                    sh("curl -s --write-out %{response_code} --output /dev/null -H \"Authorization: JWT ${TOKEN}\" -X PATCH --data-urlencode \"description=${REPO_SUMMARY}\" ${DOCKER_REPO_URL}")
                 }
             }
          }
