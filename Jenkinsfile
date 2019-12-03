@@ -64,8 +64,7 @@ pipeline {
     post {
          always {
             // cleanup
-            def WORKSPACE = pwd()
-            sh("rm -rf ${WORKSPACE}")
+            deleteDir()
          }
     }
 
