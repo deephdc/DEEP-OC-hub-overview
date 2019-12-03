@@ -21,7 +21,7 @@ pipeline {
                 checkout scm
                 script {
                     def REPO = "deep-oc-dogs_breed_det"     // same REPO for DockerHub and GitHub                    
-                    def ORG = "vykozlov"                    // same ORG for DockerHub and GitHub
+                    def ORG = "deephdc "                    // same ORG for DockerHub and GitHub
                     def URL_HUB = "https://hub.docker.com/v2"
                     def DOCKER_REPO_URL="${URL_HUB}/repositories/${ORG}/${REPO}/"
                     def README_URL = "https://raw.githubusercontent.com/${ORG}/${REPO}/master/README.md"
@@ -29,7 +29,7 @@ pipeline {
                     echo "${README_URL}"
 
                     // get Docker Hub Token
-                    //  .first insall jq
+                    //  .first install jq
                     sh "wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 && chmod +x ./jq"
                     //  .obtain TOKEN. For some reason have to trancate end-of-line
                     TOKEN = sh(
