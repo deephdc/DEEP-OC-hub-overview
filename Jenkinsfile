@@ -22,7 +22,7 @@ pipeline {
                 script {
                     // same REPO for DockerHub and GitHub
                     def REPO = "deep-oc-semseg_vaihingen"
-                    def REPO_SUMMARY = "Dog's Breed detector based on deep learning, uses DEEPaaS API."
+                    def REPO_SUMMARY = "Dog\'s Breed detector based on deep learning, uses DEEPaaS API."
                     
                     // === everything below should not be changed ===
                     // same ORG for DockerHub and GitHub                      
@@ -55,12 +55,14 @@ pipeline {
                     echo "[INFO] Received response code: ${RESPONSE_CODE}";
 
                     // update short description, aka summary
-                    sh("curl -s -H \"Authorization: JWT ${TOKEN}\" -X PATCH --data-urlencode description=${REPO_SUMMARY} ${DOCKER_REPO_URL}")
+                    sh("curl -s --write-out %{response_code} --output /dev/null -H \"Authorization: JWT ${TOKEN}\" -X PATCH --data-urlencode description=${REPO_SUMMARY} ${DOCKER_REPO_URL}")
                 }
             }
             post {
                 always {
-                    cleanWS()
+                    // cleanup
+                    def WORKSPACE = pwd()
+                    sh("rm -rf ${WORKSPACE}")
                 }
             }
         }
