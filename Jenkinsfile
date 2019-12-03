@@ -20,8 +20,13 @@ pipeline {
             steps{
                 checkout scm
                 script {
-                    def REPO = "deep-oc-dogs_breed_det"    // same REPO for DockerHub and GitHub                    
-                    def ORG = "deephdc"                    // same ORG for DockerHub and GitHub
+                    // same REPO for DockerHub and GitHub
+                    def REPO = "deep-oc-semseg_vaihingen"
+                    def REPO_SUMMARY = "Dog's Breed detector based on deep learning, uses DEEPaaS API."
+                    
+                    // === everything below should not be changed ===
+                    // same ORG for DockerHub and GitHub                      
+                    def ORG = "deephdc"                    
                     def URL_HUB = "https://hub.docker.com/v2"
                     def DOCKER_REPO_URL="${URL_HUB}/repositories/${ORG}/${REPO}/"
                     def README_URL = "https://raw.githubusercontent.com/${ORG}/${REPO}/master/README.md"
@@ -48,11 +53,14 @@ pipeline {
                     )
 
                     echo "[INFO] Received response code: ${RESPONSE_CODE}";
+
+                    // update short description, aka summary
+                    sh("curl -s -H \"Authorization: JWT ${TOKEN}\" -X PATCH --data-urlencode description=${REPO_SUMMARY} ${DOCKER_REPO_URL}")
                 }
             }
             post {
                 always {
-                    DockerClean()
+                    cleanWS()
                 }
             }
         }
