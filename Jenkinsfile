@@ -43,7 +43,9 @@ pipeline {
                 }
             }
             post {
-                DockerClean()                
+                always {
+                    DockerClean()
+                }
             }
         }
     }
