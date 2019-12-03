@@ -22,7 +22,7 @@ pipeline {
                 script {
                     // same REPO for DockerHub and GitHub
                     def REPO = "deep-oc-semseg_vaihingen"
-                    def REPO_SUMMARY = "Dogs Breed detector based on deep learning, uses DEEPaaS API."
+                    def REPO_SUMMARY = "2D semantic segmentation on the Vaihingen dataset, uses DEEPaaS API."
                     
                     // === everything below should not be changed ===
                     // same ORG for DockerHub and GitHub                      
