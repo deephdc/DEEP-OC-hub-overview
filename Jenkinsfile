@@ -20,8 +20,8 @@ pipeline {
             steps{
                 checkout scm
                 script {
-                    def REPO = "deep-oc-dogs_breed_det"     // same REPO for DockerHub and GitHub                    
-                    def ORG = "deephdc "                    // same ORG for DockerHub and GitHub
+                    def REPO = "deep-oc-dogs_breed_det"    // same REPO for DockerHub and GitHub                    
+                    def ORG = "deephdc"                    // same ORG for DockerHub and GitHub
                     def URL_HUB = "https://hub.docker.com/v2"
                     def DOCKER_REPO_URL="${URL_HUB}/repositories/${ORG}/${REPO}/"
                     def README_URL = "https://raw.githubusercontent.com/${ORG}/${REPO}/master/README.md"
