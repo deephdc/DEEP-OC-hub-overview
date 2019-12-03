@@ -20,26 +20,34 @@ pipeline {
             steps{
                 checkout scm
                 script {
-                    def REPO = "deep-oc-dogs_breed_det"    // same REPO for DockerHub and GitHub                    
-                    def ORG = "deephdc"                    // same ORG for DockerHub and GitHub
+                    def REPO = "deep-oc-dogs_breed_det"     // same REPO for DockerHub and GitHub                    
+                    def ORG = "vykozlov"                    // same ORG for DockerHub and GitHub
                     def URL_HUB = "https://hub.docker.com/v2"
-                    def README_URL = "https://raw.githubusercontent.com/${ORG}/${REPO}/master/README.md"
                     def DOCKER_REPO_URL="${URL_HUB}/repositories/${ORG}/${REPO}/"
+                    def README_URL = "https://raw.githubusercontent.com/${ORG}/${REPO}/master/README.md"
+
+                    echo "${README_URL}"
 
                     // get Docker Hub Token
-                    sh "wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 &&  chmod +x ./jq"
+                    //  .first insall jq
+                    sh "wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 && chmod +x ./jq"
+                    //  .obtain TOKEN. For some reason have to trancate end-of-line
                     TOKEN = sh(
-                        script: "curl -s -H \"Content-Type: application/json\" -X POST -d '{\"username\": \"${DOCKER_CREDS_USR}\", \"password\": \"${DOCKER_CREDS_PSW}\"}' ${URL_HUB}/users/login/ | ./jq -r .token",
+                        script: "curl -s -H \"Content-Type: application/json\" -X POST -d '{\"username\": \"${DOCKER_CREDS_USR}\", \"password\": \"${DOCKER_CREDS_PSW}\"}' ${URL_HUB}/users/login/ | ./jq -r .token | tr -d '\n\t'",
                         returnStdout: true,
                     )               
 
-                    sh '''
-                       curl -o _README.md ${README_URL}
-                       README_PATH="./_README.md"
-                       //curl -X DELETE -s -H \"Authorization: JWT ${TOKEN}\" \"${URL_HUB}/repositories/${ORG}/${REPO}/tags/${TAG_TO_DELETE}/\"
-                       RESPONSE_CODE=$(curl -s --write-out %{response_code} --output /dev/null -H \"Authorization: JWT ${TOKEN}\" -X PATCH --data-urlencode full_description@${README_PATH} ${DOCKER_REPO_URL})
-                       echo "[INFO] Received response code: $RESPONSE_CODE"
-                       '''
+                    def WORKSPACE = pwd()
+                    def README_PATH = "${WORKSPACE}/_README.md"
+                    // download GitHub README.md
+                    sh("curl -o ${README_PATH} ${README_URL}")
+                    // update Overview at Docker Hub with the README.md
+                    RESPONSE_CODE = sh(script:
+                        "curl -s --write-out %{response_code} --output /dev/null -H \"Authorization: JWT ${TOKEN}\" -X PATCH --data-urlencode full_description@${README_PATH} ${DOCKER_REPO_URL}",
+                        returnStdout: true,
+                    )
+
+                    echo "[INFO] Received response code: ${RESPONSE_CODE}";
                 }
             }
             post {
