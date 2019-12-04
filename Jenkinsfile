@@ -21,8 +21,8 @@ pipeline {
                 checkout scm
                 script {
                     // same REPO for DockerHub and GitHub
-                    def REPO = "deep-oc-dogs_breed_det"
-                    def REPO_SUMMARY = "Dogs breed detector based on deep learning, uses DEEPaaS API."
+                    def REPO = "deep-oc-generic-dev"
+                    def REPO_SUMMARY = "Docker image for developing new modules for DEEP-OC."
                     
                     // === everything below should not be changed ===
                     // same ORG for DockerHub and GitHub                      
